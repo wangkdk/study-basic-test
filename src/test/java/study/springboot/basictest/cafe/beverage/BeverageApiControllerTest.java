@@ -75,24 +75,4 @@ class BeverageApiControllerTest {
                 .andExpect(status().isBadRequest())
         ;
     }
-
-    @Test
-    @DisplayName("음료 저장 테스트 - 중복된 음료 이름")
-    void saveBeverage_duplicated_name() throws Exception {
-        // given
-        BeverageSaveRequestDto beverage = BeverageSaveRequestDto.builder()
-                .name("아메리카노")
-                .price(2000)
-                .build();
-
-        // when & then
-        this.mockMvc.perform(post("/beverage")
-                .content(objectMapper.writeValueAsString(beverage))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-        )
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-        ;
-    }
 }
