@@ -9,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,6 +34,9 @@ class BeverageApiControllerTest {
 
     @Autowired
     BeverageRepository beverageRepository;
+
+    @Autowired
+    EntityManager em;
 
     @Test
     @DisplayName("모든 음료 조회하기")
@@ -106,6 +112,53 @@ class BeverageApiControllerTest {
         // when & then
         this.mockMvc.perform(post("/beverage")
                 .content(objectMapper.writeValueAsString(beverage))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+        ;
+    }
+
+    @Test
+    @DisplayName("음료 수정 테스트")
+    void updateBeverage() throws Exception {
+        // given
+        Beverage savedBeverage= generateBeverage("에스프레소", 1900);
+
+        BeverageUpdateRequestDto updateRequestDto = BeverageUpdateRequestDto.builder()
+                .name("맛있는 에스프레소")
+                .price(3000)
+                .build();
+
+        // when & then
+        this.mockMvc.perform(put("/beverage/{id}", savedBeverage.getId())
+                .content(objectMapper.writeValueAsString(updateRequestDto))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+        ;
+
+
+        Beverage beverage = beverageRepository.findById(savedBeverage.getId()).get();
+        assertEquals(3000, beverage.getPrice());
+    }
+
+    @Test
+    @DisplayName("음료 수정 테스트 - 잘못된 inpupt")
+    void updateBeverage_wrong_input() throws Exception {
+        // given
+        Beverage savedBeverage= generateBeverage("에스프레소", 1900);
+
+        BeverageUpdateRequestDto updateRequestDto = BeverageUpdateRequestDto.builder()
+                .price(3000)
+                .build();
+
+        // when & then
+        this.mockMvc.perform(put("/beverage/{id}", savedBeverage.getId())
+                .content(objectMapper.writeValueAsString(updateRequestDto))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
         )

@@ -28,4 +28,9 @@ public class Beverage {
         this.name = name;
         this.price = price;
     }
+
+    public void update(BeverageUpdateRequestDto updateRequestDto) {
+        this.name = updateRequestDto.getName();
+        this.price = updateRequestDto.getPrice();
+    }
 }

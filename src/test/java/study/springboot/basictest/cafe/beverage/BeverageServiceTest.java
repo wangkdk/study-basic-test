@@ -47,4 +47,31 @@ class BeverageServiceTest {
         assertEquals(saveRequestDto.getName(), savedBeverage.getName());
     }
 
+//    @DisplayName("음료 수정 성공 테스트")
+//    @Test
+//    void beverageUpdate() {
+//        // given
+//        BeverageService beverageService = new BeverageService(beverageRepository);
+//
+//        BeverageSaveRequestDto saveRequestDto = BeverageSaveRequestDto.builder()
+//                .name("아메리카노")
+//                .price(1000)
+//                .build();
+//
+//        Beverage beverage = Beverage.builder()
+//                .name("아메리카노")
+//                .price(1000)
+//                .build();
+//
+//        // mocking
+//        given(beverageRepository.existsByName(any())).willReturn(false);
+//        given(beverageService.saveBeverage(saveRequestDto)).willReturn(beverage);
+//
+//        // when
+//        Beverage savedBeverage = beverageService.saveBeverage(saveRequestDto);
+//
+//        // then
+//        assertEquals(saveRequestDto.getName(), savedBeverage.getName());
+//    }
+
 }

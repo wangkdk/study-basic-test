@@ -55,4 +55,14 @@ public class BeverageApiController {
         return ResponseEntity.ok().body(beverageService.saveBeverage(saveRequestDto).getId());
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Long> updateBeverage(@PathVariable Long id,
+                                               @RequestBody @Valid BeverageUpdateRequestDto updateRequestDto, Errors errors) {
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok().body(beverageService.updateBeverage(id, updateRequestDto).getId());
+    }
+
 }
